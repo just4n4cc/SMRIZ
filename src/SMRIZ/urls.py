@@ -1,22 +1,23 @@
-"""
-URL configuration for SMRIZ project.
-
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/4.2/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
-"""
 from django.contrib import admin
-from django.urls import path
+from django.contrib.messages import api
+from django.urls import path, include
+from . import views
+from dotenv import load_dotenv
+import os
+import subprocess
+
+
+def get_api_prefix():
+    # res = subprocess.run(['git rev-parse --abbrev-ref HEAD | grep dev'])
+    res = subprocess.call('git rev-parse --abbrev-ref HEAD | grep dev > /dev/null', shell=True)
+    if res == 0:
+        return 'dev/'
+    return ''
+
 
 urlpatterns = [
+    path('', views.index, name='index'),
     path('admin/', admin.site.urls),
+    path('film', include('films.urls')),
+    path(get_api_prefix() + 'api/', include('films.urls'))
 ]

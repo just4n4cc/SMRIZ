@@ -1,0 +1,15 @@
+version: '3'
+
+services:
+  web:
+    tty: true
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    command: bash entrypoint.sh
+    volumes:
+      - ../db.sqlite3:/proj/db.sqlite3
+    ports:
+      - "${PORT}:8000"
+    env_file:
+      - .env
